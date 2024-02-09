@@ -3,10 +3,10 @@ package com.boneless.cube.networking;
 import java.io.*;
 import java.net.*;
 
-public class SimpleChat {
+public class SimpleChatClient {
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.out.println("Usage: java SimpleChat <host> <port>");
+            System.out.println("Usage: java SimpleChatClient <host> <port>");
             return;
         }
 
