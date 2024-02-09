@@ -52,6 +52,6 @@ public class Entity extends JPanel {
         boardData[x][y] = 0;
     }
     protected int getEntityID(){
-        return 0;
+        return 9999;
     }
 }

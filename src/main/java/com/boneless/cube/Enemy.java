@@ -40,9 +40,8 @@ public class Enemy extends Entity {
         return 4;
     }
     protected void collisionCheck(int newX, int newY){
-        if(boardData[newX][newY] == objectList.get("player1")){
+        if(boardData[newX][newY] == objectList.get("player1") || boardData[newX][newY] == objectList.get("player2")){
             player1.kill();
-        }else if (boardData[newX][newY] == objectList.get("player2")){
             player2.kill();
         }
     }

@@ -13,13 +13,13 @@ public class CubeGame extends JFrame implements KeyListener {
     private static final int[][] board1 = {
             {3,3,3,3,3,3,3,3,3,3},
             {3,0,0,0,0,0,0,0,0,3},
-            {3,0,0,0,0,0,0,0,0,3},
+            {3,0,3,0,0,0,0,0,0,3},
             {3,0,0,1,0,2,0,0,0,3},
-            {3,0,0,0,4,4,0,0,0,3},
-            {3,0,0,0,4,4,0,0,0,3},
             {3,0,0,0,0,0,0,0,0,3},
             {3,0,0,0,0,0,0,0,0,3},
-            {3,0,0,0,0,9,0,0,0,3},
+            {3,0,0,0,0,0,0,0,0,3},
+            {3,0,0,0,0,4,0,0,0,3},
+            {3,0,0,0,0,0,0,0,0,3},
             {3,3,3,3,3,3,3,3,3,3}
     };
     static boolean runGame = true;
@@ -99,7 +99,8 @@ public class CubeGame extends JFrame implements KeyListener {
         String XY2 = "something";
         for(int i = 0; i < boardData.length; i++){
             for(int j = 0; j < boardData[i].length; j++){
-                String EXY = "something";
+                String EXY;
+                String WXY;
                 gameBoard[i][j] = new JPanel();
                 masterBoard.add(gameBoard[i][j]);
                 int num = boardData[i][j];
@@ -112,7 +113,7 @@ public class CubeGame extends JFrame implements KeyListener {
                     System.out.println(XY2);
                     XY2 = i + "," + j;
                     System.out.println(XY2);
-                }if(num == 3){
+                }if(num == 4){
                     EXY = i + "," + j;
                     if(!EXY.equals("something")) {
                         String[] splitEXY = EXY.split(",");
