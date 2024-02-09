@@ -3,15 +3,16 @@ package com.boneless.cube.networking;
 import java.io.*;
 import java.net.*;
 
-public class SimpleChatClient {
+public class SimpleChat {
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Usage: java SimpleChatClient <host> <port>");
+        if (args.length != 3) {
+            System.out.println("Usage: java SimpleChat <host> <port> <username>");
             return;
         }
 
         String host = args[0];
         int port = Integer.parseInt(args[1]);
+        String username = args[2];
 
         try {
             // Create a socket to connect to the server
@@ -31,7 +32,7 @@ public class SimpleChatClient {
                 try {
                     String message;
                     while ((message = in.readLine()) != null) {
-                        System.out.println("Server: " + message);
+                        System.out.println(message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -42,7 +43,7 @@ public class SimpleChatClient {
             // Main loop to send messages from the client
             String userInputLine;
             while ((userInputLine = userInput.readLine()) != null) {
-                out.println(userInputLine);
+                out.println(username + ": " + userInputLine);
             }
 
             // Close the socket

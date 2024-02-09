@@ -2,49 +2,66 @@ package com.boneless.cube.networking;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class SimpleChatServer {
+    private static final int PORT = 12345;
+    private static final List<PrintWriter> clients = new ArrayList<>();
+
     public static void main(String[] args) {
-        try {
-            // Create a server socket on port 8080
-            ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Server started. Listening on port 8080...");
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server is running on port " + PORT);
 
-            // Wait for client connection
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Client connected: " + clientSocket.getInetAddress().getHostName());
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("New client connected: " + clientSocket);
 
-            // Input and output streams for the client socket
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                // Create a new thread to handle the client
+                Thread thread = new Thread(new ClientHandler(clientSocket));
+                thread.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            // Input stream for user input from terminal
-            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+    private static class ClientHandler implements Runnable {
+        private final Socket clientSocket;
+        private BufferedReader in;
+        private PrintWriter out;
 
-            // Create a thread to read messages from the client
-            Thread readThread = new Thread(() -> {
+        public ClientHandler(Socket socket) {
+            this.clientSocket = socket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+                clients.add(out);
+
+                String message;
+                while ((message = in.readLine()) != null) {
+                    System.out.println("Received: " + message);
+                    broadcast(message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 try {
-                    String message;
-                    while ((message = in.readLine()) != null) {
-                        System.out.println("Client: " + message);
-                    }
+                    clientSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
-            readThread.start();
-
-            // Main loop to send messages from the server
-            String userInputLine;
-            while ((userInputLine = userInput.readLine()) != null) {
-                out.println(userInputLine);
             }
+        }
 
-            // Close sockets
-            clientSocket.close();
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        private void broadcast(String message) {
+            for (PrintWriter client : clients) {
+                client.println(message);
+            }
         }
     }
 }
